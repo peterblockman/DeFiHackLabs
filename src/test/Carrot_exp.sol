@@ -42,7 +42,7 @@ contract ContractTest is DSTest {
     Carrot.transReward(hex'bf699b4b000000000000000000000000b4c79daB8f259C7Aee6E5b2Aa729821864227e84');
 
     // pool address: 0x6863b549bf730863157318df4496ed111adfa64f
-    // 0xbf699b4b" change owner
+    // 0xbf699b4b" change owner function unknownbf699b4b (https://bscscan.com/bytecode-decompiler?a=0x6863b549bf730863157318df4496ed111adfa64f)
     // address(this): 0xb4c79daB8f259C7Aee6E5b2Aa729821864227e84
 
     console.log("Perform transferFrom");

